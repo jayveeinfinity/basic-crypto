@@ -1,0 +1,60 @@
+<button onclick="getData()">Get Data</button>
+<div id="currencies"></div>
+<div>
+    The data will refresh after <span id="time">30</span> second/s...
+</div>
+<script>
+    const api = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+    const v = document.getElementById('currencies');
+    const code = document.getElementById('code');
+    const description = document.getElementById('description');
+    const rate = document.getElementById('rate');
+    const timerDisplay = document.getElementById('time');
+
+    // startCountdown();
+
+    async function getData() {
+        const response = await fetch(api);
+        const data = await response.json();
+
+        currenciesData = Object.entries(data.bpi);
+
+        currencies.innerHTML = "";
+
+        currenciesData.forEach(currency => {
+            currency = currency[1];
+            const div = document.createElement("div");
+            
+            const h1 = document.createElement("h1");
+            const span = document.createElement("span");
+            const p = document.createElement("p");
+
+            h1.innerText = `BTC${currency.code} (${currency.symbol})`
+            span.innerText = `${currency.description}`
+
+            p.innerText =  `${currency.rate}`;
+
+            h1.appendChild(span);
+
+            div.appendChild(h1);
+            div.appendChild(p);
+            currencies.appendChild(div);
+        });
+    }
+
+    function startCountdown() {
+        getData();
+        let timeLeft = 5;
+        timerDisplay.textContent = timeLeft;
+
+        countdown = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                startCountdown();
+            }
+        }, 1000);
+    }
+</script>
